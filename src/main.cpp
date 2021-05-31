@@ -2,9 +2,10 @@
 //#include "Pages.h"
 #include <Arduino.h>
 #include <Pages.h>
+#include <SoftwareSerial.h>
 
-
-ESPweb pidweb(mySerial,Serial);
+SoftwareSerial mySerial(5, 6); // RX, TX
+ESPweb pidweb(&mySerial,&Serial);
 
 
 void resetCb() {

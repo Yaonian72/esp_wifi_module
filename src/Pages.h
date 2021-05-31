@@ -1,11 +1,11 @@
-#ifndef PAGES_H
-#define PAGES_H
+#ifndef ELC_PAGES_H
+#define ELC_PAGES_H
 
-#include <SoftwareSerial.h>
+
 #include <ELClient.h>
 #include <ELClientWebServer.h>
 
-extern SoftwareSerial mySerial;
+// extern SoftwareSerial mySerial;
 typedef void (*r_cb)();
 
 // extern ELClient esp;
@@ -20,8 +20,7 @@ struct AppConfig{
 class ESPweb {
 
     public:
-        ESPweb(Stream &comm_ser, Stream &debug_ser):
-            esp(&comm_ser),webServer(&esp),_dbg_ser(&debug_ser){};
+        ESPweb(Stream *comm_ser, Stream *debug_ser);
         // void PIDInit();
         void begin(r_cb cb);
         void process_esp();
@@ -47,7 +46,7 @@ class ESPweb {
         AppConfig p_speed ={30, 30};
         ELClient esp;
         Stream * _dbg_ser;
-        Stream * comm_ser;
+        Stream * _comm_ser;
         ELClientWebServer webServer;// Initialize the Web-Server client
 };
 
@@ -56,4 +55,4 @@ class ESPweb {
 
 
 
-#endif /* PAGES_H */
+#endif /* ELC_PAGES_H */

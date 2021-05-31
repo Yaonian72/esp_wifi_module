@@ -1,7 +1,6 @@
 #include <Pages.h>
 
-SoftwareSerial mySerial(5, 6); // RX, TX
-
+ESPweb::ESPweb(Stream *comm_ser, Stream *debug_ser):esp(comm_ser),webServer(&esp),_dbg_ser(debug_ser),_comm_ser(comm_ser){}
 
 void ESPweb::begin(r_cb cb){
   esp.resetCb = cb;
@@ -12,7 +11,7 @@ void ESPweb::begin(r_cb cb){
 void ESPweb::userSetFieldCb(const char * field)
 {
   String fld = field;
-  Serial.println(fld);
+  _dbg_ser->println(fld);
   if( fld == F("a_kp")){
     a_kp = (float)webServer.getArgFloat();}
   else if( fld == F("a_ki")){
@@ -34,8 +33,8 @@ void ESPweb::userSetFieldCb(const char * field)
 
 void ESPweb::userLoadCb(const char * url)
 {
-    // Serial.print("024420");
-    // Serial.println();
+    // _dbg_ser->print("024420");
+    // _dbg_ser->println();
     // char buf[MAX_STR_LEN];
     webServer.setArgFloat(F("a_kp"), a_kp);
     webServer.setArgFloat(F("a_ki"), a_ki);
@@ -46,27 +45,27 @@ void ESPweb::userLoadCb(const char * url)
     webServer.setArgFloat(F("f_kd"), f_kd);
     webServer.setArgInt(F("fragspeed"), p_speed.fragspeed);
     // webServer.setArgString(F("Valve Status"), (v_status == 0) ?  F("on") : F("off"));
-    // Serial.print("4343420"); 
-    Serial.println("4343420");
+    // _dbg_ser->print("4343420"); 
+    _dbg_ser->println("4343420");
 }
 
 // void ButtonPressCb(char * btnId)
 // {
 //         String fld = btnId;
-//   Serial.println(fld);
-//   Serial.println("Botton pressed!");
+//   _dbg_ser->println(fld);
+//   _dbg_ser->println("Botton pressed!");
 // }
 
 void ESPweb::ButtonPressCb(char * btnId)
 {
   String id = btnId;
-//   mySerial.print(id);
+//   _comm_ser->print(id);
   if( id == F("Valve_on") )
     v_status = 1;
   else if( id == F("Valve_off") )
     v_status = 0;
-//   mySerial.print(v_status);
-//   mySerial.println();
+//   _comm_ser->print(v_status);
+//   _comm_ser->println();
 }
 
 URLHandler *ESPweb::createURLH(){
@@ -90,43 +89,43 @@ void ESPweb::Byteprint(float f){
 
   for (std::size_t i = 0; i != sizeof(float); ++i)
   {
-      mySerial.print(p[i]);
+      _comm_ser->print(p[i]);
   }
 }
 
 void ESPweb::printloop(){
 
-    Serial.print(a_ki);
-    Serial.print(",");
-    Serial.print(a_kp);
-    Serial.print(",");
-    Serial.print(a_kd);
-    Serial.print(",");
-    Serial.println();
+    _dbg_ser->print(a_ki);
+    _dbg_ser->print(",");
+    _dbg_ser->print(a_kp);
+    _dbg_ser->print(",");
+    _dbg_ser->print(a_kd);
+    _dbg_ser->print(",");
+    _dbg_ser->println();
     
-    mySerial.print(a_ki);
-    mySerial.print(",");
-    mySerial.print(a_kp);
-    mySerial.print(",");
-    mySerial.print(a_kd);
-    mySerial.print(",");
-    mySerial.print(f_ki);
-    mySerial.print(",");
-    mySerial.print(f_kp);
-    mySerial.print(",");
-    mySerial.print(f_kd);
-    mySerial.print(",");
-    mySerial.print(p_speed.airspeed);
-    mySerial.print(",");
-    mySerial.print(p_speed.fragspeed);
-    mySerial.print(",");
-    mySerial.print(v_status);
+    _comm_ser->print(a_ki);
+    _comm_ser->print(",");
+    _comm_ser->print(a_kp);
+    _comm_ser->print(",");
+    _comm_ser->print(a_kd);
+    _comm_ser->print(",");
+    _comm_ser->print(f_ki);
+    _comm_ser->print(",");
+    _comm_ser->print(f_kp);
+    _comm_ser->print(",");
+    _comm_ser->print(f_kd);
+    _comm_ser->print(",");
+    _comm_ser->print(p_speed.airspeed);
+    _comm_ser->print(",");
+    _comm_ser->print(p_speed.fragspeed);
+    _comm_ser->print(",");
+    _comm_ser->print(v_status);
     // Byteprint(ki);
-    // // mySerial.print(",");
+    // // _comm_ser->print(",");
     // Byteprint(a_kp);
-    // // mySerial.print(",");
+    // // _comm_ser->print(",");
     // Byteprint(a_kd);
-    mySerial.println();
+    _comm_ser->println();
     delay(400);
 }
 
